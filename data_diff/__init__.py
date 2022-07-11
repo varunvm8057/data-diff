@@ -13,7 +13,11 @@ from .diff_tables import (
 
 
 def connect_to_table(
-    db_uri: str, table_name: Union[DbPath, str], key_column: str = "id", thread_count: Optional[int] = 1, **kwargs
+    db_uri: str,
+    table_name: Union[DbPath, str],
+    key_columns: Tuple[str, ...] = ("id",),
+    thread_count: Optional[int] = 1,
+    **kwargs,
 ):
     """Connects to a URI and creates a TableSegment instance"""
 
@@ -22,7 +26,7 @@ def connect_to_table(
     if isinstance(table_name, str):
         table_name = db.parse_table_name(table_name)
 
-    return TableSegment(db, table_name, key_column, **kwargs)
+    return TableSegment(db, table_name, key_columns, **kwargs)
 
 
 def diff_tables(
@@ -30,7 +34,7 @@ def diff_tables(
     table2: TableSegment,
     *,
     # Name of the key column, which uniquely identifies each row (usually id)
-    key_column: str = "id",
+    key_columns: Tuple[str, ...] = ("id",),
     # Name of updated column, which signals that rows changed (usually updated_at or last_update)
     update_column: str = None,
     # Extra columns to compare
@@ -64,7 +68,7 @@ def diff_tables(
     tables = [table1, table2]
     segments = [
         t.new(
-            key_column=key_column,
+            key_columns=key_columns,
             update_column=update_column,
             extra_columns=extra_columns,
             min_key=min_key,
