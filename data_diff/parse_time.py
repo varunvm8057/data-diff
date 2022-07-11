@@ -71,4 +71,4 @@ def parse_time_delta(t: str):
 
 
 def parse_time_before_now(t: str):
-    return (datetime.now() - parse_time_delta(t)).strftime('%s')
+    return (datetime.now() - parse_time_delta(t)).strftime('%s')+'000'
